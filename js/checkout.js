@@ -868,6 +868,23 @@ const checkPay = () => {
       duration: 1000,
     });
   } else {
+    const orderData = {
+      fullname: userData.fullname,
+      email: userData.email,
+      phone: userData.phone,
+      address: `${userData.address}, ${userData.ward}, ${userData.district}, ${userData.city}`,
+      items: cartData.items.map(item => item.title + " (x" + item.amount + ")").join(", "),
+      total: document.querySelector(".total-value") ? document.querySelector(".total-value").innerText : "0đ"
+    };
+
+    // 2. Gửi dữ liệu về Google Sheets thông qua URL Web App bạn đã tạo
+    // THAY ĐOẠN DƯỚI BẰNG ĐƯỜNG DẪN WEB APP URL BẠN LẤY ĐƯỢC TỪ GOOGLE APPS SCRIPT
+    fetch('https://script.google.com/macros/s/AKfycbyEeUHx6wJ3LaOayHlh2b8SqhLHueQ_nOz1OBhHlK7VoOjooYitxkbHMiRr-pF5FTlAoQ/exec', {
+      method: 'POST',
+      mode: 'no-cors', // Cực kỳ quan trọng để trình duyệt cho phép gửi dữ liệu chéo miền
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(orderData)
+    });
     toastPay({
       title: "Thành Công!",
       message: "Bạn đã đặt hàng thành công.",
